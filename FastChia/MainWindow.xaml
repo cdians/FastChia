@@ -1,0 +1,247 @@
+﻿<Window x:Class="FastChia.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:FastChia" 
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" xmlns:c="clr-namespace:FastChia.model"
+        mc:Ignorable="d"
+        Title="FastChia  V1.5 alpha" Width="820" Height="790" ResizeMode="CanResizeWithGrip">
+    <Grid>
+        <ScrollViewer>
+            <StackPanel>
+                <Grid  Height="50" Margin="0,10,0,10">
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="FastChia一键P盘，免费使用" FontSize="15" Foreground="Red"  VerticalAlignment="Center" Block.TextAlignment="Center"/>
+                        <StackPanel Margin="25,0,0,0">
+                            <TextBlock Text="开发者：admin@elevenstyle.com" Foreground="Blue"/>
+                            <TextBlock Text="QQ群：129903872" Foreground="Blue"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+                <StackPanel Margin="25,0,25,0" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left">
+                    <TextBlock Text="矿工公钥：" VerticalAlignment="Center"/>
+                    <TextBox ToolTip="请输入Farmer Public Key(fpk)"  Height="20" Width="665" Text="{Binding fpk}">
+                        <TextBox.Resources>
+                            <VisualBrush x:Key="HintText" TileMode="None" Opacity="0.5" Stretch="None" AlignmentX="Left">
+                                <VisualBrush.Visual>
+                                    <TextBlock Text="   请输入Farmer Public Key(fpk)" Foreground="Gray" FontSize="10"/>
+                                </VisualBrush.Visual>
+                            </VisualBrush>
+                        </TextBox.Resources>
+                        <TextBox.Style>
+                            <Style TargetType="TextBox">
+                                <Style.Triggers>
+                                    <Trigger Property="Text" Value="{x:Null}">
+                                        <Setter Property="Background" Value="{StaticResource HintText}"/>
+                                    </Trigger>
+                                    <Trigger Property="Text" Value="">
+                                        <Setter Property="Background" Value="{StaticResource HintText}"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBox.Style>
+                    </TextBox>
+                </StackPanel>
+                <StackPanel Margin="25,10,25,0" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left">
+                    <TextBlock Text="矿池公钥：" VerticalAlignment="Center"/>
+                    <TextBox ToolTip="请输入Pool Public Key(ppk)"  Height="20" Width="665" Text="{Binding ppk}">
+                        <TextBox.Resources>
+                            <VisualBrush x:Key="HintText" TileMode="None" Opacity="0.5" Stretch="None" AlignmentX="Left">
+                                <VisualBrush.Visual>
+                                    <TextBlock Text="请输入Pool Public Key(ppk)" Foreground="Gray" FontSize="10"/>
+                                </VisualBrush.Visual>
+                            </VisualBrush>
+                        </TextBox.Resources>
+                        <TextBox.Style>
+                            <Style TargetType="TextBox">
+                                <Style.Triggers>
+                                    <Trigger Property="Text" Value="{x:Null}">
+                                        <Setter Property="Background" Value="{StaticResource HintText}"/>
+                                    </Trigger>
+                                    <Trigger Property="Text" Value="">
+                                        <Setter Property="Background" Value="{StaticResource HintText}"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBox.Style>
+                    </TextBox>
+                </StackPanel>
+                <StackPanel Margin="25,10,25,0" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left">
+                    <TextBlock Text="农田大小：" VerticalAlignment="Center"/>
+                    <ComboBox Width="130" SelectedItem="{Binding bSize}" ItemsSource="{Binding fList}" DisplayMemberPath="desc">
+                    </ComboBox>
+                    <TextBlock Text="内存大小：" VerticalAlignment="Center" Margin="30,0,0,0"/>
+                    <TextBox ToolTip="请输入内存大小"  Height="20" Width="50" Text="{Binding mSize}"/>
+                    <TextBlock Text="循环次数：" VerticalAlignment="Center" Margin="30,0,0,0"/>
+                    <TextBox ToolTip="请输入循环次数"  Height="20" Width="50" Text="{Binding loopCount}"/>
+                    <TextBlock Text="最大并发数：" VerticalAlignment="Center" Margin="30,0,0,0"/>
+                    <TextBox ToolTip="默认为CPU核心数"  Height="20" Width="50" Text="{Binding cpuCount}"/>
+                </StackPanel>
+                <StackPanel Margin="25,10,25,0" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left">
+                    <TextBlock Text="使用线程：" VerticalAlignment="Center"/>
+                    <TextBox ToolTip="单个任务使用线程数,默认2个"  Height="20" Width="50" Text="{Binding threadNum}"/>
+                    <TextBlock Text="写入速度：" VerticalAlignment="Center" Margin="30,0,0,0"/>
+                    <TextBox ToolTip="最终盘写入速度,单位M/s"  Height="20" Width="50" Text="{Binding writeSpeed}"/>
+                    <StackPanel Margin="30,0,0,0" Orientation="Horizontal">
+                        <TextBlock Text="Chia配置：" VerticalAlignment="Center"/>
+                        <Button Content="初始化" Width="50">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="Click">
+                                    <c:EventCommand Command="{Binding ClickEven}" CommandParameter="initCf"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </Button>
+                    </StackPanel>
+                    <StackPanel Margin="30,0,0,0" Orientation="Horizontal">
+                        <TextBlock Text="公钥：" VerticalAlignment="Center"/>
+                        <Button Content="读取公钥" Width="55">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="Click">
+                                    <c:EventCommand Command="{Binding ClickEven}" CommandParameter="showKeys"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </Button>
+                    </StackPanel>
+                </StackPanel>
+                <Border CornerRadius="5" BorderBrush="Gray" Background="LightGray" BorderThickness="2" Padding="8" Margin="35,10,35,0" >
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="已选择临时目录:" Foreground="Gray" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                            <Button Content="选择" Width="30" VerticalAlignment="Center">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="Click">
+                                        <c:EventCommand Command="{Binding ClickEven}" CommandParameter="selectTempDir"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </Button>
+                        </StackPanel>
+                        <WrapPanel Orientation="Horizontal" Margin="0,5,0,0">
+                            <ItemsControl ItemsSource="{Binding tempList}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" Margin="0,0,20,0">
+                                            <TextBlock Text="{Binding Path=.}" VerticalAlignment="Center" Foreground="Blue"/>
+                                            <Image Source="/Resources/del.png" Width="18" Margin="5,0,0,0">
+                                                <i:Interaction.Triggers>
+                                                    <i:EventTrigger EventName="MouseLeftButtonUp">
+                                                        <c:EventCommand Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}, Path=DataContext.delTempDir}" CommandParameter="{Binding Path=.}"/>
+                                                    </i:EventTrigger>
+                                                </i:Interaction.Triggers>
+                                            </Image>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </WrapPanel>
+                    </StackPanel>
+                </Border>
+                <Border CornerRadius="5" BorderBrush="Gray" Background="LightGray" BorderThickness="2" Padding="8" Margin="35,10,35,0" >
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="已选择最终目录:" Foreground="Gray" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                            <Button Content="选择" Width="30" VerticalAlignment="Center">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="Click">
+                                        <c:EventCommand Command="{Binding ClickEven}" CommandParameter="selectSaveDir"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </Button>
+                        </StackPanel>
+                        <WrapPanel Orientation="Horizontal" Margin="0,5,0,0">
+                            <ItemsControl ItemsSource="{Binding saveList}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" Margin="0,0,20,0">
+                                            <TextBlock Text="{Binding Path=.}" VerticalAlignment="Center" Foreground="Blue"/>
+                                            <Image Source="/Resources/del.png" Width="18" Margin="5,0,0,0">
+                                                <i:Interaction.Triggers>
+                                                    <i:EventTrigger EventName="MouseLeftButtonUp">
+                                                        <c:EventCommand Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}, Path=DataContext.delSaveDir}" CommandParameter="{Binding Path=.}"/>
+                                                    </i:EventTrigger>
+                                                </i:Interaction.Triggers>
+                                            </Image>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </WrapPanel>
+                    </StackPanel>
+                </Border>
+                <StackPanel Margin="25,10,25,0" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left">
+                    <TextBlock Text="正在运行：" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding runingTaskNum}" VerticalAlignment="Center"/>
+                    <TextBlock Text="已完成：" VerticalAlignment="Center" Margin="30,0,0,0"/>
+                    <TextBlock Text="{Binding finalPlotNum}" VerticalAlignment="Center"/>
+                    <TextBlock Text="循环次数：" VerticalAlignment="Center" Margin="30,0,0,0"/>
+                    <TextBlock Text="{Binding plotLoopNum}" VerticalAlignment="Center"/>
+                    <StackPanel Margin="30,0,0,0" Orientation="Horizontal">
+                        <TextBlock Text="自动接续：" VerticalAlignment="Center"/>
+                        <RadioButton Content="手动" IsChecked="{Binding manual}" VerticalAlignment="Center"/>
+                        <RadioButton Content="自动" IsChecked="{Binding autoNext}" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                    </StackPanel>
+                    <StackPanel Margin="30,0,0,0">
+                        <Button Content="开始绘图" Visibility="{Binding showBt}" Width="70">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="Click">
+                                    <c:EventCommand Command="{Binding ClickEven}" CommandParameter="begin"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </Button>
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel Margin="25,10,25,15">
+                    <DataGrid Name="TaskList" FrozenColumnCount="6" AutoGenerateColumns="False" CanUserAddRows="False"  RowHeaderWidth="0"
+                      AlternationCount="2" AlternatingRowBackground="LightGray" IsReadOnly="True" ItemsSource="{Binding}" SelectionMode="Single">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="PID" Width="1*" Binding="{Binding id}"/>
+                            <DataGridTemplateColumn Header="名称" Width="8*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding name}" Foreground="Blue">
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="MouseLeftButtonDown">
+                                                    <c:EventCommand Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, Path=DataContext.showLog}" CommandParameter="{Binding name}"/>
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
+                                        </TextBlock>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <!--<DataGridTextColumn Header="名称" Width="8*" Binding="{Binding name}"/>-->
+                            <DataGridTextColumn Header="进度" Width="1*"  Binding="{Binding progress}"/>
+                            <DataGridTextColumn Header="临时" Width="1*"  Binding="{Binding path}"/>
+                            <DataGridTextColumn Header="最终" Width="1*"  Binding="{Binding finalPath}"/>
+                            <DataGridTextColumn Header="状态" Width="1*" Binding="{Binding status}"/>
+                            <DataGridTextColumn Header="耗时" Width="1*" Binding="{Binding time}"/>
+                            <DataGridTextColumn Header="次数" Width="1*"  Binding="{Binding loop}"/>
+                            <DataGridTemplateColumn Header="操作" Width="1.2*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Content="删除" Width="40" Visibility="{Binding showDelBt}">
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="Click">
+                                                    <c:EventCommand Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, Path=DataContext.delTask}" CommandParameter="{Binding id}"/>
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
+                                        </Button>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Window>
