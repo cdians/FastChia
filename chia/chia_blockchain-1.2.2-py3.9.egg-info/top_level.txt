@@ -1,0 +1,3 @@
+build_scripts
+chia
+mozilla-ca
